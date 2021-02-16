@@ -41,7 +41,8 @@ https://phinvads.cdc.gov/vads/ViewCodeSystemConcept.action?oid=2.16.840.1.113883
 
 > The docker images use a multipart build process so the final compressed images are under 20MB.
 
-There is a build var `POP` as population created at buildtime not runtime; and a runtime var `FHIR` for which FHIR server.
+* A buildtime var `POP` as population.
+* A runtime var `FHIR` which is the FHIR server.
 
 Run the hosted build. On run it loads patients into the `host.docker.internal:8080/fhir` endpoint. This can be changed using an environment variable, `FHIR`.
 ```bash
@@ -62,7 +63,7 @@ docker run stuff
 
 ## Sanity checks on FHIR Resources
 
-> Install the awesome [jq](https://stedolan.github.io/jq/download/) for fast and more intuitive parsing.
+> Install the awesome [jq](https://stedolan.github.io/jq/download/) for fast and intuitive parsing.
 
 Summary stats:
 
@@ -101,7 +102,7 @@ curl -s http://localhost:8080/fhir/Observation?_count=10000&_content=HIV | jq '.
 ## Create patients directly from JAR for supporting IG test cases
 
 * Clone this repo
-* Change into this directory
+* Change dir into it.
 * Download the latest release of Synthea, which at this moment is:
 ```
 wget https://github.com/synthetichealth/synthea/releases/download/v2.7.0/synthea-with-dependencies.jar
@@ -113,12 +114,15 @@ Generate patients in the current directory.
 * `-d modules/` adds the local module path `modules`.
 * `-m hiv*` says to only create patients in `hiv*` module.
 * `-s 123` uses a seed to create the same dataset every time.
+
+Like so:
 ```bash
 java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true
 ```
-The patient records in FHIR are in `output/fhir`
+
+The patient records in FHIR are in `/output`
 ```
-cd output/fhir
+cd /output
 ```
 
 Now a one-liner to put bundles into HAPI:
@@ -129,28 +133,27 @@ Or... to rename the files for use in testing IGs, each patient bundle must have 
 ```bash
 for x in ./*.json; do mkdir "${x%.*}" && mv "$x" "${x%.*}" && mv ; done
 ```
+
 Then remove for now the practitioner and hospital bundles as they can't be processed in IG publisher
 ```
 rm -r output/fhir/hospital*
 rm -r output/fhir/practitioner*
 ```
 
-Now you are ready to copy the folders into the IG for testing.
-
 ## Options for running
 
-* Use the [cqframework/hiv-indicators]9https://github.com/cqframework/hiv-indicators) repository and the CQL Atom plugin.
+
+* Copy the folders into the IG for testing. Use the [cqframework/hiv-indicators]9https://github.com/cqframework/hiv-indicators) repository and the CQL Atom plugin.
 * Run with HAPI with CQL processing:
 See: [CQL Development and Unit Testing with hapi-fhir and hapi-fhir-jpaserver-starter](https://docs.google.com/document/d/1nMChThWev-FRsjvsqDPEdS-0qrjqONoMj4livjD2dqQ)
 * Run against the DBCB team's server can be used at: https://cqm-sandbox.alphora.com/cqf-ruler-r4/fhir
 
-## CQL hints
+## Some CQL hints
 
 * Double quotes are for identifiers and single quotes represent string literals, for example, "female" should be 'female'.
 * Check for odd copy/paste errors in quotes.
 * Required libraries: `include FHIRHelpers version '4.0.1'` Use of FHIRHelpers is implicit in the translator, based on the modelinfo file with FHIR.
 * The CQL/ELM processing code does not update the Library resource. If a Library has CQL content it is converted to ELM "on-the-fly" as it is used. This means the CQL must be included as Base64-encoded.
-
 
 
 
