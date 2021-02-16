@@ -1,0 +1,170 @@
+{
+  "name": "HIV Simple 2",
+  "remarks": [
+    "Module is a proof-of-concept, do not use outside of experimentation."
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "direct_transition": "Years Before Infection"
+    },
+    "Terminal": {
+      "type": "Terminal"
+    },
+    "Has HIV": {
+      "type": "ConditionOnset",
+      "target_encounter": "",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": 86406008,
+          "display": "HIV Positive"
+        }
+      ],
+      "direct_transition": "HIV Test Positive"
+    },
+    "HIV Test Positive": {
+      "type": "DiagnosticReport",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "75622-1",
+          "display": "HIV types 1 and 2 testing"
+        }
+      ],
+      "observations": [
+        {
+          "category": "laboratory",
+          "unit": "",
+          "codes": [
+            {
+              "system": "LOINC",
+              "code": "75622-1",
+              "display": "LOINC Code",
+              "value_set": ""
+            }
+          ],
+          "value_code": {
+            "system": "SNOMED-CT",
+            "code": 165816005,
+            "display": "HIV Positive"
+          }
+        }
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.5,
+          "transition": "ART Treatment Plan"
+        },
+        {
+          "transition": "Delay",
+          "distribution": 0.5
+        }
+      ]
+    },
+    "HIV Test Negative": {
+      "type": "DiagnosticReport",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "75622-1",
+          "display": "HIV types 1 and 2 testing"
+        }
+      ],
+      "observations": [
+        {
+          "category": "laboratory",
+          "unit": "",
+          "codes": [
+            {
+              "system": "LOINC",
+              "code": "75622-1",
+              "display": "LOINC Code",
+              "value_set": "2.16.840.1.113762.1.4.1056.50"
+            }
+          ],
+          "value_code": {
+            "system": "SNOMED-CT",
+            "code": 165815009,
+            "display": "HIV Negative"
+          }
+        }
+      ],
+      "direct_transition": "Terminal"
+    },
+    "Delay": {
+      "type": "Delay",
+      "direct_transition": "Death",
+      "range": {
+        "low": 7,
+        "high": 10,
+        "unit": "years"
+      }
+    },
+    "Death": {
+      "type": "Death",
+      "exact": {
+        "quantity": 1,
+        "unit": "days"
+      },
+      "direct_transition": "Terminal"
+    },
+    "Years Before Infection": {
+      "type": "Delay",
+      "range": {
+        "low": 15,
+        "high": 65,
+        "unit": "years"
+      },
+      "distributed_transition": [
+        {
+          "transition": "Has HIV",
+          "distribution": 0.5
+        },
+        {
+          "transition": "HIV Test Negative",
+          "distribution": 0.5
+        }
+      ]
+    },
+    "ART Treatment Plan": {
+      "type": "CarePlanStart",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": 432101000124108,
+          "display": "History of antiretroviral therapy (situation)"
+        }
+      ],
+      "direct_transition": "Viral Load Test"
+    },
+    "Viral Load Test": {
+      "type": "DiagnosticReport",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "25836-8",
+          "display": "HIV 1 RNA [#/volume] (viral load) in Specimen by NAA with probe detection"
+        }
+      ],
+      "observations": [
+        {
+          "category": "laboratory",
+          "unit": "Copies/mL",
+          "codes": [
+            {
+              "system": "LOINC",
+              "code": "25836-8",
+              "display": "HIV 1 RNA [#/volume] (viral load) in Specimen by NAA with probe detection"
+            }
+          ],
+          "range": {
+            "low": 200,
+            "high": 1000000
+          }
+        }
+      ],
+      "direct_transition": "Terminal"
+    }
+  }
+}

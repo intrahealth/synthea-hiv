@@ -1,0 +1,10 @@
+# mac
+.DS_Store
+# dotenv
+.env
+
+# java
+*.jar
+
+# synthea
+output/
