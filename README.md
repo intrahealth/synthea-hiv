@@ -99,7 +99,7 @@ Observation
 curl -s http://localhost:8080/fhir/Observation?_count=10000&_content=HIV | jq '.entry[] | .resource.code.coding[], .resource.subject.reference, .resource.encounter.reference, .resource.valueCodeableConcept[]'
 ```
 
-## Create patients directly from JAR for supporting IG test cases
+## JAR file: Create records for loading into FHIR server
 
 * Clone this repo
 * Change dir into it.
@@ -114,34 +114,52 @@ Generate patients in the current directory.
 * `-d modules/` adds the local module path `modules`.
 * `-m hiv*` says to only create patients in `hiv*` module.
 * `-s 123` uses a seed to create the same dataset every time.
-
-Like so:
-```bash
-java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true
+* `--exporter.baseDirectory = ./output` creates records in /output/fhir
+```
+java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.baseDirectory ./output
 ```
 
-The patient records in FHIR are in `/output`
+The patient records in FHIR are in `/output/fhir`
 ```
-cd /output
+cd /output/fhir
 ```
 
 Now a one-liner to put bundles into HAPI:
 ```bash
 for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" -d @$FILE http://localhost:8080/fhir ; done
 ```
-Or... to rename the files for use in testing IGs, each patient bundle must have its own folder.
+
+### JAR file: Create records for IG usage
+
 ```bash
-for x in ./*.json; do mkdir "${x%.*}" && mv "$x" "${x%.*}" && mv ; done
+java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true --exporter.baseDirectory ./output_ig
 ```
 
-Then remove for now the practitioner and hospital bundles as they can't be processed in IG publisher
+The patient records in FHIR are in `/output_ig`
 ```
-rm -r output/fhir/hospital*
-rm -r output/fhir/practitioner*
+ls /output_ig
+```
+
+Then remove (if they exist) for now the practitioner and hospital bundles as they can't be processed in IG publisher
+```
+cd output_ig/fhir
+rm -r hospital*
+rm -r practitioner*
+```
+
+To rename the files for use in testing IGs, each patient bundle must have its own folder.
+```bash
+# from /output_ig/fhir
+for x in ./*.json; do mkdir "${x%.*}" && mv "$x" "${x%.*}" ; done
+```
+Now all of the bundles are in <patient_id>/<patient_id.json> for IG tests.
+
+Copy them into the `/input/tests/<cql_library_name>/`, for example:
+```
+cp -R 0* ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVIndicators/
 ```
 
 ## Options for running
-
 
 * Copy the folders into the IG for testing. Use the [cqframework/hiv-indicators]9https://github.com/cqframework/hiv-indicators) repository and the CQL Atom plugin.
 * Run with HAPI with CQL processing:

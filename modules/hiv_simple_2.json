@@ -23,13 +23,24 @@
       ],
       "direct_transition": "HIV Test Positive"
     },
+    "ART Medication": {
+      "type": "MedicationOrder",
+      "codes": [
+        {
+          "system": "RxNorm",
+          "code": "1234",
+          "display": "RxNorm Code"
+        }
+      ],
+      "direct_transition": "Terminal"
+    },
     "HIV Test Positive": {
       "type": "DiagnosticReport",
       "codes": [
         {
           "system": "LOINC",
           "code": "75622-1",
-          "display": "HIV types 1 and 2 testing"
+          "display": "HIV 1 and 2 tests - Meaningful Use set"
         }
       ],
       "observations": [
@@ -40,7 +51,7 @@
             {
               "system": "LOINC",
               "code": "75622-1",
-              "display": "LOINC Code",
+              "display": "HIV 1 and 2 tests - Meaningful Use set",
               "value_set": ""
             }
           ],
@@ -53,13 +64,16 @@
       ],
       "distributed_transition": [
         {
-          "distribution": 0.5,
-          "transition": "ART Treatment Plan"
+          "transition": "ART Medication",
+          "distribution": 0.5
         },
         {
           "transition": "Delay",
           "distribution": 0.5
         }
+      ],
+      "remarks": [
+        "HIV Positive"
       ]
     },
     "HIV Test Negative": {
@@ -68,7 +82,7 @@
         {
           "system": "LOINC",
           "code": "75622-1",
-          "display": "HIV types 1 and 2 testing"
+          "display": "HIV 1 and 2 tests - Meaningful Use set"
         }
       ],
       "observations": [
@@ -79,8 +93,8 @@
             {
               "system": "LOINC",
               "code": "75622-1",
-              "display": "LOINC Code",
-              "value_set": "2.16.840.1.113762.1.4.1056.50"
+              "display": "HIV 1 and 2 tests - Meaningful Use set",
+              "value_set": ""
             }
           ],
           "value_code": {
@@ -90,7 +104,10 @@
           }
         }
       ],
-      "direct_transition": "Terminal"
+      "direct_transition": "Terminal",
+      "remarks": [
+        "HIV Negative"
+      ]
     },
     "Delay": {
       "type": "Delay",
@@ -126,45 +143,6 @@
           "distribution": 0.5
         }
       ]
-    },
-    "ART Treatment Plan": {
-      "type": "CarePlanStart",
-      "codes": [
-        {
-          "system": "SNOMED-CT",
-          "code": 432101000124108,
-          "display": "History of antiretroviral therapy (situation)"
-        }
-      ],
-      "direct_transition": "Viral Load Test"
-    },
-    "Viral Load Test": {
-      "type": "DiagnosticReport",
-      "codes": [
-        {
-          "system": "LOINC",
-          "code": "25836-8",
-          "display": "HIV 1 RNA [#/volume] (viral load) in Specimen by NAA with probe detection"
-        }
-      ],
-      "observations": [
-        {
-          "category": "laboratory",
-          "unit": "Copies/mL",
-          "codes": [
-            {
-              "system": "LOINC",
-              "code": "25836-8",
-              "display": "HIV 1 RNA [#/volume] (viral load) in Specimen by NAA with probe detection"
-            }
-          ],
-          "range": {
-            "low": 200,
-            "high": 1000000
-          }
-        }
-      ],
-      "direct_transition": "Terminal"
     }
   }
 }
