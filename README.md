@@ -132,32 +132,44 @@ for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=u
 ### JAR file: Create records for IG usage
 
 ```bash
-java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true --exporter.baseDirectory ./output_ig
+java -jar synthea-with-dependencies.jar -p 20 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true --exporter.baseDirectory ./output_ig
 ```
 
 The patient records in FHIR are in `/output_ig`
 ```
-ls /output_ig
+ls output_ig/fhir
 ```
 
-Then remove (if they exist) for now the practitioner and hospital bundles as they can't be processed in IG publisher
+**The files must be preprocessed a bit before usage as IG test data.**
+
+Remove (if they exist) for now the practitioner and hospital bundles as they can't be processed in IG publisher
 ```
 cd output_ig/fhir
 rm -r hospital*
 rm -r practitioner*
 ```
 
-To rename the files for use in testing IGs, each patient bundle must have its own folder.
+Rename the files as each patient bundle must have its own folder named by the `resource.id`. This will put all of the bundles are in <patient_id>/<patient_id.json> for IG tests.
 ```bash
-# from /output_ig/fhir
+# from folder /output_ig/fhir
 for x in ./*.json; do mkdir "${x%.*}" && mv "$x" "${x%.*}" ; done
 ```
-Now all of the bundles are in <patient_id>/<patient_id.json> for IG tests.
 
-Copy them into the `/input/tests/<cql_library_name>/`, for example:
+As of the date of this commit, there's a [bug](https://github.com/DBCG/cql-evaluator/issues/32) in cql-evaluator where it does not get the Observation in the bundle. This requires a fix.
+
+Run the `fixbug.py` Python script to create a set of resources in `/output_ig_fix/fhir`.
+```bash
+# should be run from the root of the repo
+cd ../../
+python fixbug.py
 ```
-cp -R 0* ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVIndicators/
+
+Change directory into folder and copy them into the `/input/tests/<cql_library_name>/`, for example:
 ```
+cd output_ig_fix/fhir
+cp -R * ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVIndicators/
+```
+
 
 ## Options for running
 

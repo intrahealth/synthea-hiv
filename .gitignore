@@ -9,3 +9,7 @@
 # synthea
 output/
 output_ig/
+output_ig_fix/
+
+# unused stuff
+outtakes
