@@ -128,12 +128,10 @@ cd output/fhir
 To post the files to HAPI, they require a certain order because [Synthea only creates bundles of type transaction and POST](https://github.com/synthetichealth/synthea/issues/846). This means everything must be resolved for the transaction to be successful or it fails.
 
 ```bash
-# post the practitioner bundle
-curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @practitionerInformation1614641921664.json http://localhost:8080/fhir
 # post the hospital bundle
-curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @hospitalInformation1614641921664.json http://localhost:8080/fhir
-# create a folder for response bundles
-mkdir ../response
+cat hospital*.json | curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data-binary @- http://localhost:8080/fhir
+# post the practitioner bundle
+cat practitioner*.json | curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data-binary @- http://localhost:8080/fhir
 # now a one-liner to put the rest of the bundles into HAPI
 for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @$FILE http://localhost:8080/fhir ; done
 ```
