@@ -32,7 +32,7 @@
           "display": "RxNorm Code"
         }
       ],
-      "direct_transition": "Terminal"
+      "direct_transition": "Viral Load"
     },
     "HIV Test Positive": {
       "type": "DiagnosticReport",
@@ -40,7 +40,7 @@
         {
           "system": "LOINC",
           "code": "75622-1",
-          "display": "HIV 1 and 2 tests - Meaningful Use set"
+          "display": "HIV types 1 and 2 testing"
         }
       ],
       "observations": [
@@ -51,7 +51,7 @@
             {
               "system": "LOINC",
               "code": "75622-1",
-              "display": "HIV 1 and 2 tests - Meaningful Use set",
+              "display": "LOINC Code",
               "value_set": ""
             }
           ],
@@ -82,7 +82,7 @@
         {
           "system": "LOINC",
           "code": "75622-1",
-          "display": "HIV 1 and 2 tests - Meaningful Use set"
+          "display": "HIV types 1 and 2 testing"
         }
       ],
       "observations": [
@@ -93,8 +93,8 @@
             {
               "system": "LOINC",
               "code": "75622-1",
-              "display": "HIV 1 and 2 tests - Meaningful Use set",
-              "value_set": ""
+              "display": "LOINC Code",
+              "value_set": "2.16.840.1.113762.1.4.1056.50"
             }
           ],
           "value_code": {
@@ -143,6 +143,38 @@
           "distribution": 0.5
         }
       ]
+    },
+    "Viral Load": {
+      "type": "DiagnosticReport",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "25836-8",
+          "display": "HIV 1 RNA NAA+probe (Specimen)"
+        }
+      ],
+      "observations": [
+        {
+          "category": "laboratory",
+          "unit": "copies/mL",
+          "codes": [
+            {
+              "system": "LOINC",
+              "code": "25836-8",
+              "display": "HIV 1 RNA NAA+probe (Specimen)"
+            }
+          ],
+          "range": {
+            "low": 200,
+            "high": 1000000
+          }
+        }
+      ],
+      "direct_transition": "Death",
+      "remarks": [
+        "HIV 1 RNA NAA+probe (Specimen)"
+      ]
     }
-  }
+  },
+  "gmf_version": 1
 }

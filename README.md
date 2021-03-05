@@ -10,7 +10,7 @@ The following is the status of what codesystems/valuesets are generated:
 
 ### Added
 
-HIV Test Results (from mADX and other sources)
+DiagnosticReport & Observation: HIV Test Results (from mADX and other sources)
 * code "HIV Negative": code '165815009' from "SNOMED-CT"
 * code "HIV Positive": code '165816005' from "SNOMED-CT"
 * code "HIV 1 and 2 tests - Meaningful Use set": '75622-1' from "LOINC"
@@ -18,17 +18,19 @@ HIV Test Results (from mADX and other sources)
 ConditionOnset: HIV infection (may be useful)
 * SNOMED-CT 86406008
 
-History of ART Therapy (Needs valueset and distribution of adherence)
-* code "History of antiretroviral therapy (situation)": '432101000124108' from "SNOMED-CT"
-(http://purl.bioontology.org/ontology/SNOMEDCT/432101000124108)
-
 Viral load
-* LOINC codes of 25836-8 (copies/mL)
+* LOINC code 25836-8 
+* "HIV 1 RNA NAA+probe (Specimen)"
+* Units: copies/mL
 * Suppressed viral load (<1000 copies/mL)
 * Used range of 200 (very low) -> 1000000 (very high)
 
 
 ### Not added
+
+History of ART Therapy (Needs valueset and distribution of adherence)
+* code "History of antiretroviral therapy (situation)": '432101000124108' from "SNOMED-CT"
+(http://purl.bioontology.org/ontology/SNOMEDCT/432101000124108)
 
 Pregnancy, breastfeeding
 * The pregnancy module could be adopted but named valuesets are apparently out of use:
@@ -50,7 +52,7 @@ docker run intrahealth/synthea-hiv:latest
 # same as intrahealth/synthea-hiv:pop100
 ```
 
-There is also an image with 1000 patients, use:
+There is also an image with 1000, 10000, 100000 and 1 million patients, for example:
 ```
 docker run intrahealth/synthea-hiv:pop1000
 ```
@@ -116,18 +118,50 @@ Generate patients in the current directory.
 * `-s 123` uses a seed to create the same dataset every time.
 * `--exporter.baseDirectory = ./output` creates records in /output/fhir
 ```
-java -jar synthea-with-dependencies.jar -p 100 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.baseDirectory ./output
+java -jar synthea-with-dependencies.jar -p 1000 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.baseDirectory ./output
 ```
 
 The patient records in FHIR are in `/output/fhir`
 ```
-cd /output/fhir
+cd output/fhir
+```
+To post the files to HAPI, they require a certain order because [Synthea only creates bundles of type transaction and POST](https://github.com/synthetichealth/synthea/issues/846). This means everything must be resolved for the transaction to be successful or it fails.
+
+```bash
+# post the practitioner bundle
+curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @practitionerInformation1614641921664.json http://localhost:8080/fhir
+# post the hospital bundle
+curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @hospitalInformation1614641921664.json http://localhost:8080/fhir
+# create a folder for response bundles
+mkdir ../response
+# now a one-liner to put the rest of the bundles into HAPI
+for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @$FILE http://localhost:8080/fhir ; done
 ```
 
-Now a one-liner to put bundles into HAPI:
-```bash
-for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" -d @$FILE http://localhost:8080/fhir ; done
-```
+### Use the patient data for `$evaluate-measure`
+
+run _genonce
+in output folder
+
+output/Library-FHIRCommon.json
+output/Library-HIVINDAV1.json
+output/Library-AgeRanges.json
+output/Library-HIVIndicators.json
+no fhir helpers?
+
+output/Measure-hiv-indicators.json
+output/Measure-HIVINDAV1.json
+
+load patients
+load fhir helpers and modelinfo
+load codesystems, valuesets
+generate or update the measure
+$evaluate-measure operation
+
+
+
+
+
 
 ### JAR file: Create records for IG usage
 
@@ -167,9 +201,8 @@ python fixbug.py
 Change directory into folder and copy them into the `/input/tests/<cql_library_name>/`, for example:
 ```
 cd output_ig_fix/fhir
-cp -R * ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVIndicators/
+cp -R * ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVSimpleTestResult/
 ```
-
 
 ## Options for running
 
