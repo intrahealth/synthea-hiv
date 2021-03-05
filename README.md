@@ -138,31 +138,6 @@ mkdir ../response
 for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @$FILE http://localhost:8080/fhir ; done
 ```
 
-### Use the patient data for `$evaluate-measure`
-
-run _genonce
-in output folder
-
-output/Library-FHIRCommon.json
-output/Library-HIVINDAV1.json
-output/Library-AgeRanges.json
-output/Library-HIVIndicators.json
-no fhir helpers?
-
-output/Measure-hiv-indicators.json
-output/Measure-HIVINDAV1.json
-
-load patients
-load fhir helpers and modelinfo
-load codesystems, valuesets
-generate or update the measure
-$evaluate-measure operation
-
-
-
-
-
-
 ### JAR file: Create records for IG usage
 
 ```bash
