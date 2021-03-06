@@ -54,7 +54,7 @@ docker run intrahealth/synthea-hiv:latest
 
 > Note, that Synthea generates alive and dead fake patients, so when asking for 1000 patients, it will include 1000 alive patients and a number of dead patients in addition to the alive patients.
 
-There is also an image with 1000, 10000, 100000 and 1 million (alive) patients, for example:
+There is also an image with 1000, or 10000 (alive) patients, for example:
 ```
 docker run intrahealth/synthea-hiv:pop1000
 ```
