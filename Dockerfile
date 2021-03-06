@@ -31,7 +31,9 @@ ENV FHIR=$FHIR
 
 # CMD dockerize -wait ${FHIR}/metadata for FILE in * ; do curl -X POST -H "Content-Type: application/fhir+json" -d @$FILE ${FHIR} ; done
 # errors with dockerize, comment out for now
-CMD for FILE in * ; do curl -s -X POST -H "Content-Type: application/fhir+json" -d @$FILE ${FHIR} ; done
+CMD cat hospital*.json | curl -X POST -H "Content-Type: application/fhir+json" --data-binary @- ${FHIR} \
+&& cat practitioner*.json | curl -X POST -H "Content-Type: application/fhir+json" --data-binary @- ${FHIR} \
+&& for FILE in * ; do curl -s -X POST -H "Content-Type: application/fhir+json" -d @$FILE ${FHIR} ; done
 
 
 
