@@ -8,6 +8,8 @@ The following is the status of what codesystems/valuesets are generated:
 
 ## Status
 
+![alt text](flow.png "Simple HIV Workflow")
+
 ### Added
 
 DiagnosticReport & Observation: HIV Test Results (from mADX and other sources)
