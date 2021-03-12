@@ -166,19 +166,10 @@ Rename the files as each patient bundle must have its own folder named by the `r
 for x in ./*.json; do mkdir "${x%.*}" && mv "$x" "${x%.*}" ; done
 ```
 
-As of the date of this commit, there's a [bug](https://github.com/DBCG/cql-evaluator/issues/32) in cql-evaluator where it does not get the Observation in the bundle. This requires a fix.
-
-Run the `fixbug.py` Python script to create a set of resources in `/output_ig_fix/fhir`.
-```bash
-# should be run from the root of the repo
-cd ../../
-python fixbug.py
-```
-
 Change directory into folder and copy them into the `/input/tests/<cql_library_name>/`, for example:
 ```
-cd output_ig_fix/fhir
-cp -R * ~/src/github.com/citizenrich/hiv-indicators/input/tests/HIVSimpleTestResult/
+cd output_ig/fhir
+cp -R * ~/src/github.com/intrahealth/simple-hiv-ig/input/tests/HIVSimpleTestResult/
 ```
 
 ## Options for running
