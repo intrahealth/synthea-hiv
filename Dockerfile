@@ -1,7 +1,7 @@
 FROM openjdk:8-jre-alpine3.9
 RUN apk --no-cache add openssl wget git curl
 RUN wget https://github.com/synthetichealth/synthea/releases/download/v2.7.0/synthea-with-dependencies.jar
-RUN git clone https://github.com/intrahealth/madx-hiv.git
+RUN git clone https://github.com/intrahealth/synthea-hiv.git
 
 ARG POP=100
 
@@ -10,7 +10,7 @@ RUN java -jar synthea-with-dependencies.jar \
     # --exporter.fhir.bulk_data true \
     # keep all patient history
     --exporter.years_of_history 0 \
-    -d madx-hiv/synthea/modules \
+    -d synthea-hiv/modules \
     -m hiv* \
     # seed to create the same patients every time
     -s 123
