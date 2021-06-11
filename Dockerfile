@@ -13,7 +13,8 @@ RUN java -jar synthea-with-dependencies.jar \
     -d synthea-hiv/modules \
     -m hiv* \
     # seed to create the same patients every time
-    -s 123
+    -s 123 \
+    --exporter.fhir.use_us_core_ig false
 
 # ENV DOCKERIZE_VERSION v0.5.0
 # RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \

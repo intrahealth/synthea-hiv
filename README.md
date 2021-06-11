@@ -121,8 +121,9 @@ Generate patients in the current directory.
 * `-m hiv*` says to only create patients in `hiv*` module.
 * `-s 123` uses a seed to create the same dataset every time.
 * `--exporter.baseDirectory = ./output` creates records in /output/fhir
+* `--exporter.fhir.use_us_core_ig false` turns off US Core IG, e.g. race categories
 ```
-java -jar synthea-with-dependencies.jar -p 1000 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.baseDirectory ./output
+java -jar synthea-with-dependencies.jar -p 1000 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.baseDirectory ./output --exporter.fhir.use_us_core_ig false
 ```
 
 The patient records in FHIR are in `/output/fhir`
@@ -143,7 +144,7 @@ for FILE in *; do curl -X POST -H "Content-Type: application/fhir+json;charset=u
 ### JAR file: Create records for IG usage
 
 ```bash
-java -jar synthea-with-dependencies.jar -p 20 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true --exporter.baseDirectory ./output_ig
+java -jar synthea-with-dependencies.jar -p 20 -d modules/ -m hiv* -s 123 --exporter.years_of_history 0 --exporter.years_of_history 0 --exporter.use_uuid_filenames true --exporter.baseDirectory ./output_ig --exporter.fhir.use_us_core_ig false
 ```
 
 The patient records in FHIR are in `/output_ig`
