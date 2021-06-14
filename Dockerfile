@@ -1,6 +1,6 @@
-FROM openjdk:8-jre-alpine3.9
+FROM openjdk:16-jdk-alpine
 RUN apk --no-cache add openssl wget git curl
-RUN wget https://github.com/synthetichealth/synthea/releases/download/v2.7.0/synthea-with-dependencies.jar
+RUN wget https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
 RUN git clone https://github.com/intrahealth/synthea-hiv.git
 
 ARG POP=100

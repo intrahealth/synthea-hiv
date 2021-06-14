@@ -111,7 +111,7 @@ curl -s http://localhost:8080/fhir/Observation?_count=10000&_content=HIV | jq '.
 * Change dir into it.
 * Download the latest release of Synthea, which at this moment is:
 ```
-wget https://github.com/synthetichealth/synthea/releases/download/v2.7.0/synthea-with-dependencies.jar
+wget https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
 ```
 
 Generate patients in the current directory.
