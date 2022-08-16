@@ -1,12 +1,11 @@
 # Synthea-HIV
 
-This is a worked example of generating Synthea longitudinal medical records for a fake population. The difference between this and ordinary Synthea is that HIV positivity has a higher prevalence and longer mortality to facilitate testing clinical quality measures, addition to having random DHIS2 org units attached as identifiers. If you don't know what DHIS is and don't work in HIV-related public health programs, this repo probably isn't for you. But, the shell scripts may be interesting. :)
+This is a worked example of generating [Synthea](https://github.com/synthetichealth/synthea) longitudinal medical records for a fake population. The difference between this and ordinary Synthea is that HIV positivity has a higher prevalence and longer mortality to facilitate testing clinical quality measures, in addition to having random DHIS2 org units attached as identifiers. If you don't know what DHISs is and don't work in HIV-related public health programs, this repo probably isn't for you. But, the shell scripts may be interesting. :)
 
 ## How to Use
 
-* Downlaod the already prepared records at: 
-* Change directory into where you unzipped it.
-* POST the files to your favorite FHIR server.
+* Downlaod the already prepared records under releases and unzip. Warning: the files unzip to around 1.2GB.
+* POST the files to your favorite FHIR server. There's an example script `_load_from_zip.sh`. The `preparedsynthea.json` file contains the modified organization resources and is loaded first. Then the practitioner file, then the patients.
 
 ## Development
 
@@ -19,8 +18,7 @@ This is a worked example of generating Synthea longitudinal medical records for 
     * This invokes the `increaseprev.py` script, which invokes the `increaseprev.py` tool. (todo: This could be made cleaner.)
     * Runs synthea
     * and puts records in this repo.
-* Load/check the records with `_load.sh`
-
+* Load/check the records with `_load.sh`.
 
 Note the `|` because we are leaving out the value and just using the identifier.
 ```bash
