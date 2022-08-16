@@ -13,3 +13,6 @@ output_ig_fix/
 
 # unused stuff
 outtakes
+
+# compressed files
+fhir.zip

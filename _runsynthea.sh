@@ -37,7 +37,8 @@ python3 $HOME/src/github.com/intrahealth/synthea-hiv/increaseprev.py
 --generate.max_attempts_to_keep_patient 10 \
 --exporter.fhir.transaction_bundle true \
 --exporter.practitioner.fhir.export true \
---exporter.hospital.fhir.export true
+--exporter.hospital.fhir.export true \
+--generate.only_alive_patients true
 
 
 
