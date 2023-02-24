@@ -29,7 +29,7 @@ python3 $HOME/src/github.com/intrahealth/synthea-hiv/increaseprev.py
 # stops from looping forever to keep patient alive
 # gen transaction bundles for patients
 # separate practitioner and location/organization bundles
-./run_synthea -p 1000 -s 123 -cs 123 -r 20220901 \
+./run_synthea -p 100 -s 123 -cs 123 -r 20221231 \
 --exporter.use_uuid_filenames true \
 --exporter.years_of_history 2 \
 --exporter.baseDirectory $HOME/src/github.com/intrahealth/synthea-hiv/output \

@@ -11,8 +11,11 @@ cat ./preparedsynthea.json | curl -X POST -H "Content-Type: application/fhir+jso
 echo "Loading revised file"
 cat ./preparedsynthea.json | curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @- 'http://hapi.fhir.org/baseR4'
 
-rm output/fhir/hospital* || true
+# rm output/fhir/hospital* || true
+
+cat output/fhir/hospital*.json | curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @- ${FHIR}
 cat output/fhir/practitioner*.json | curl -X POST -H "Content-Type: application/fhir+json;charset=utf-8" --data @- ${FHIR}
+
 
 # todo: loads org stuff twice, but doesn't hurt anything
 for FILE in output/fhir/*.json
