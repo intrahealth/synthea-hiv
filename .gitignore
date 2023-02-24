@@ -8,6 +8,7 @@
 
 # synthea
 output/
+output-1000/
 output_ig/
 output_ig_fix/
 
